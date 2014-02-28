@@ -1,6 +1,7 @@
 {
     "name": "ffreitas-br/command-lock-bundle",
     "type": "symfony-bundle",
+    "license": "MIT",
     "description": "Symfony bundle who create a lock in commands, avoiding the execution of same command simultaneously",
     "keywords": ["bundle", "symfony", "command"],
     "homepage": "https://github.com/ffreitas-br/command-lock-bundle",
