@@ -1,0 +1,5 @@
+imports:
+    - { resource: config.yml }
+
+command_lock_bundle:
+    pid_directory: "%kernel.root_dir%/Temp/pid_files"
