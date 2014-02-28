@@ -143,7 +143,7 @@ class CommandLockEventListenerTest extends \PHPUnit_Framework_TestCase
         $pidFile2 = $this->pidDirectory.'/testfile2.pid';
         file_put_contents($pidFile2, 'test2');
 
-        static::$firstInitiatedListener->shutDown(45, $pidFile2);
+        static::$firstInitiatedListener->shutDown(null, $pidFile2);
         $this->assertFileNotExists($pidFile2);
     }
 }

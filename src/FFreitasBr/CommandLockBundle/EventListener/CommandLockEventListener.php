@@ -72,6 +72,7 @@ class CommandLockEventListener extends ContainerAware
         if (function_exists('pcntl_signal')) {
             declare(ticks = 1);
             pcntl_signal(SIGTERM, array($this, 'shutDown'));
+            pcntl_signal(SIGINT, array($this, 'shutDown'));
         }
     }
 
@@ -109,6 +110,9 @@ class CommandLockEventListener extends ContainerAware
         }
         if (file_exists($pidFile)) {
             unlink($pidFile);
+        }
+        if (isset($sigNumber)) {
+            exit(PHP_EOL."Aborted by the signal {$sigNumber}".PHP_EOL);
         }
     }
 }
