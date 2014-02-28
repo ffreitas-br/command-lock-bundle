@@ -1,0 +1,10 @@
+parameters:
+    command_lock_bundle.command_lock.event_listener.class: FFreitasBr\CommandLockBundle\EventListener\CommandLockEventListener
+
+services:
+    command_lock_bundle.command_lock.event_listener:
+        class:     "%command_lock_bundle.command_lock.event_listener.class%"
+        arguments: [ @service_container ]
+        tags:
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+            - { name: kernel.event_listener, event: console.terminate, method: onConsoleTerminate }
