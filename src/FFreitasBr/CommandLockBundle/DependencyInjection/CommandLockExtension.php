@@ -17,7 +17,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class CommandLockExtension extends Extension
 {
     use NamesDefinitionsTrait;
-    
+
     /**
      * @param array            $configs
      * @param ContainerBuilder $container
