@@ -112,4 +112,38 @@ class CommandLockEventListenerTest extends \PHPUnit_Framework_TestCase
         static::$firstInitiatedListener->onConsoleTerminate($consoleTerminateEvent);
         $this->assertFileNotExists($pidFile);
     }
+
+    public function testOnConsoleCommandWithExistingFIleButNotRunningProcess()
+    {
+        $pidFile = $this->pidDirectory.'/cacheclear.pid';
+        file_put_contents($pidFile, '99999');
+        $myPid = getmypid();
+        $commandForTesting   = new CacheClearCommand();
+        $inputForTesting     = new ArrayInput(array());
+        $outputForTesting    = new StreamOutput(fopen('php://memory', 'w', false));
+        $consoleCommandEvent = new ConsoleCommandEvent($commandForTesting, $inputForTesting, $outputForTesting);
+        static::$firstInitiatedListener->onConsoleCommand($consoleCommandEvent);
+        $this->assertFileExists($pidFile);
+        $this->assertEquals($myPid, file_get_contents($pidFile));
+    }
+
+    public function testShutdownFunctionMustDeletePidFile()
+    {
+        $pidFile = $this->pidDirectory.'/testfile.pid';
+        file_put_contents($pidFile, 'test');
+
+        $reflection = new \ReflectionClass(static::$firstInitiatedListener);
+        $pidFileReflection = $reflection->getProperty('pidFile');
+        $pidFileReflection->setAccessible(true);
+        $pidFileReflection->setValue(static::$firstInitiatedListener, $pidFile);
+
+        static::$firstInitiatedListener->shutDown();
+        $this->assertFileNotExists($pidFile);
+
+        $pidFile2 = $this->pidDirectory.'/testfile2.pid';
+        file_put_contents($pidFile2, 'test2');
+
+        static::$firstInitiatedListener->shutDown(45, $pidFile2);
+        $this->assertFileNotExists($pidFile2);
+    }
 }

@@ -56,31 +56,22 @@ class CommandLockEventListener extends ContainerAware
         // check if command is already executing
         if (file_exists($pidFile)) {
             $pidOfRunningCommand = file_get_contents($pidFile);
-            throw (new CommandAlreadyRunningException)
-                ->setCommandName($commandName)
-                ->setPidNumber($pidOfRunningCommand);
+            if (posix_getpgid($pidOfRunningCommand) !== false) {
+                throw (new CommandAlreadyRunningException)
+                    ->setCommandName($commandName)
+                    ->setPidNumber($pidOfRunningCommand);
+            }
+            // pid file exist but the process is not running anymore
+            unlink($pidFile);
         }
         // if is not already executing create pid file
         file_put_contents($pidFile, getmypid());
         // register shutdown function to remove pid file in case of unexpected exit
-        register_shutdown_function(
-            function () use ($pidFile) {
-                if (file_exists($pidFile)) {
-                    unlink($pidFile);
-                }
-            }
-        );
+        register_shutdown_function(array($this, 'shutDown'), null, $pidFile);
         // register callback function in case of receive the terminate signal
         if (function_exists('pcntl_signal')) {
             declare(ticks = 1);
-            pcntl_signal(
-                SIGTERM,
-                function ($sigNumber) use ($pidFile) {
-                    if (file_exists($pidFile)) {
-                        unlink($pidFile);
-                    }
-                }
-            );
+            pcntl_signal(SIGTERM, array($this, 'shutDown'));
         }
     }
 
@@ -105,5 +96,19 @@ class CommandLockEventListener extends ContainerAware
     {
         $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
         return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    }
+
+    /**
+     * @param null|int $sigNumber
+     * @param null|int $pidFile
+     */
+    public function shutDown($sigNumber = null, $pidFile = null)
+    {
+        if (!isset($pidFile) && isset($this->pidFile)) {
+            $pidFile = $this->pidFile;
+        }
+        if (file_exists($pidFile)) {
+            unlink($pidFile);
+        }
     }
 }
