@@ -4,15 +4,15 @@ namespace FFreitasBr\CommandLockBundle\Integration\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use FFreitasBr\CommandLockBundle\DependencyInjection\CommandLockBundleExtension;
+use FFreitasBr\CommandLockBundle\DependencyInjection\CommandLockExtension;
 use FFreitasBr\CommandLockBundle\Traits\NamesDefinitionsTrait;
 
 /**
- * Class CommandLockBundleExtensionTest
+ * Class CommandLockExtensionTest
  *
  * @package FFreitasBr\CommandLockBundle\Integration\DependencyInjection
  */
-class CommandLockBundleExtensionTest extends \PHPUnit_Framework_TestCase
+class CommandLockExtensionTest extends \PHPUnit_Framework_TestCase
 {
     use NamesDefinitionsTrait;
 
@@ -22,7 +22,7 @@ class CommandLockBundleExtensionTest extends \PHPUnit_Framework_TestCase
     protected static $container = null;
 
     /**
-     * @var null|CommandLockBundleExtension
+     * @var null|CommandLockExtension
      */
     protected static $extension = null;
 
@@ -37,7 +37,7 @@ class CommandLockBundleExtensionTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         static::$container = new ContainerBuilder();
-        static::$extension = new CommandLockBundleExtension();
+        static::$extension = new CommandLockExtension();
         static::$pidDirectory = sys_get_temp_dir().'/FFreitasBrCommandLockBundle/pid_directory';
     }
     

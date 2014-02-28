@@ -10,11 +10,11 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Class MessageBusExtension
+ * Class CommandLockExtension
  *
  * @package FFreitasBr\CommandLockBundle\DependencyInjection
  */
-class CommandLockBundleExtension extends Extension
+class CommandLockExtension extends Extension
 {
     use NamesDefinitionsTrait;
     

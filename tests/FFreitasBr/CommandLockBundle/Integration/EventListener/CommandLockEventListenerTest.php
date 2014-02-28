@@ -2,7 +2,7 @@
 
 namespace FFreitasBr\CommandLockBundle\Integration\EventListener;
 
-use FFreitasBr\CommandLockBundle\DependencyInjection\CommandLockBundleExtension;
+use FFreitasBr\CommandLockBundle\DependencyInjection\CommandLockExtension;
 use FFreitasBr\CommandLockBundle\EventListener\CommandLockEventListener;
 use FFreitasBr\CommandLockBundle\Traits\NamesDefinitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand;
