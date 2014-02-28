@@ -68,12 +68,6 @@ class CommandLockEventListener extends ContainerAware
         file_put_contents($pidFile, getmypid());
         // register shutdown function to remove pid file in case of unexpected exit
         register_shutdown_function(array($this, 'shutDown'), null, $pidFile);
-        // register callback function in case of receive the terminate signal
-        if (function_exists('pcntl_signal')) {
-            declare(ticks = 1);
-            pcntl_signal(SIGTERM, array($this, 'shutDown'));
-            pcntl_signal(SIGINT, array($this, 'shutDown'));
-        }
     }
 
     /**
@@ -100,19 +94,15 @@ class CommandLockEventListener extends ContainerAware
     }
 
     /**
-     * @param null|int $sigNumber
      * @param null|int $pidFile
      */
-    public function shutDown($sigNumber = null, $pidFile = null)
+    public function shutDown($pidFile = null)
     {
         if (!isset($pidFile) && isset($this->pidFile)) {
             $pidFile = $this->pidFile;
         }
         if (file_exists($pidFile)) {
             unlink($pidFile);
-        }
-        if (isset($sigNumber)) {
-            exit(PHP_EOL."Aborted by the signal {$sigNumber}".PHP_EOL);
         }
     }
 }
