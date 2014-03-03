@@ -10,11 +10,11 @@ To install `command-lock-bundle` you will need just a few minutes.
 1) Include the `command-lock-bundle` in the `required` section of `composer.json`.
 ### composer.json
 ```json
-...
+// ...
 "require": {
     "ffreitas-br/command-lock-bundle": "dev-master",
 },
-...
+// ...
 ```
 After this run `composer update` or `composer intall` to refresh your dependencies.
 ###
