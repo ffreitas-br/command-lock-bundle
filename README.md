@@ -1,6 +1,7 @@
 command-lock-bundle
 ===================
-***
+[![Build Status](https://travis-ci.org/ffreitas-br/command-lock-bundle.png?branch=master)](https://travis-ci.org/ffreitas-br/command-lock-bundle)
+##
 This `command-lock-bundle` when installed prevents two or more of same command runs simultaneously.
 ***
 ## Installation
