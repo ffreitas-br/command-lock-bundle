@@ -24,10 +24,15 @@ class CommandLockEventListener extends ContainerAware
     protected $pidDirectory = null;
 
     /**
+     * @var array
+     */
+    protected $exceptionsList = array();
+
+    /**
      * @var null|string
      */
     protected $pidFile = null;
-    
+
     /**
      * @param ContainerInterface $container
      *
@@ -39,6 +44,10 @@ class CommandLockEventListener extends ContainerAware
         $this->setContainer($container);
         // get the pid directory and store in self
         $this->pidDirectory = $container->getParameter($this->configurationsParameterKey)[$this->pidDirectorySetting];
+        // get the configured exceptions list
+        $this->exceptionsList = $container->getParameter(
+            $this->configurationsParameterKey
+        )[$this->exceptionsListSetting];
     }
 
     /**
@@ -50,7 +59,11 @@ class CommandLockEventListener extends ContainerAware
     public function onConsoleCommand(ConsoleCommandEvent $event)
     {
         // generate pid file name
-        $commandName        = $event->getCommand()->getName();
+        $commandName = $event->getCommand()->getName();
+        // check for exceptions
+        if (in_array($commandName, $this->exceptionsList)) {
+            return;
+        }
         $clearedCommandName = $this->cleanString($commandName);
         $pidFile = $this->pidFile = $this->pidDirectory . "/{$clearedCommandName}.pid";
         // check if command is already executing
@@ -72,7 +85,7 @@ class CommandLockEventListener extends ContainerAware
 
     /**
      * @param ConsoleTerminateEvent $event
-     * 
+     *
      * @return void
      */
     public function onConsoleTerminate(ConsoleTerminateEvent $event)
