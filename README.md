@@ -45,6 +45,20 @@ command_lock:
 ...
 ```
 `Don't worry` if you don't have the directories created yet, the bundle will take care of this for you.
+###
+4) [OPTIONAL] Configure a list of exceptions.
+### app/config/config.yml
+```yaml
+...
+
+command_lock:
+    exception:
+        - cache:warmup
+        - cache:clear
+
+...
+```
+The commands listed in this configurations will be allowed to run simultaneously.
 
 ***
 
