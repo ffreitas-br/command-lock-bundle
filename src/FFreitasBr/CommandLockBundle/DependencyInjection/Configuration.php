@@ -31,6 +31,12 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
+                ->arrayNode($this->exceptionsListSetting)
+                    ->info('Define a list of exceptions, who will not be locked.')
+                    ->defaultValue(array())
+                        ->prototype('scalar')
+                    ->end()
+                ->end()
             ->end()
         ;
 

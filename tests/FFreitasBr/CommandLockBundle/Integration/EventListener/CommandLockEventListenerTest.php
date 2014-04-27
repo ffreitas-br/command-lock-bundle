@@ -6,6 +6,7 @@ use FFreitasBr\CommandLockBundle\DependencyInjection\CommandLockExtension;
 use FFreitasBr\CommandLockBundle\EventListener\CommandLockEventListener;
 use FFreitasBr\CommandLockBundle\Traits\NamesDefinitionsTrait;
 use Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand;
+use Symfony\Bundle\FrameworkBundle\Command\CacheWarmupCommand;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -33,10 +34,17 @@ class CommandLockEventListenerTest extends \PHPUnit_Framework_TestCase
     protected $pidDirectory = null;
 
     /**
+     * @var array
+     */
+    protected $exceptionsList = array(
+        'cache:warmup'
+    );
+
+    /**
      * @var null|CommandLockEventListener
      */
     protected static $firstInitiatedListener = null;
-    
+
     /**
      * @return void
      */
@@ -55,6 +63,7 @@ class CommandLockEventListenerTest extends \PHPUnit_Framework_TestCase
             $this->configurationsParameterKey,
             array(
                 $this->pidDirectorySetting => $this->pidDirectory,
+                $this->exceptionsListSetting => $this->exceptionsList,
             )
         );
     }
@@ -67,12 +76,12 @@ class CommandLockEventListenerTest extends \PHPUnit_Framework_TestCase
             $eventListener->cleanString('a-b c|!@#$%^&*(){}[]\\:;"\'<>,./?~`ºª•¶§∞¢£™¡“‘«æ…≤≥')
         );
     }
-    
+
     public function testOnConsoleCommandMustCreatePidFile()
     {
         $pidFile = $this->pidDirectory.'/cacheclear.pid';
         $fs = new Filesystem();
-        if (!$fs->exists($pidFile)) {
+        if ($fs->exists($pidFile)) {
             $fs->remove($pidFile);
         }
         $myPid = getmypid();
@@ -113,7 +122,7 @@ class CommandLockEventListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertFileNotExists($pidFile);
     }
 
-    public function testOnConsoleCommandWithExistingFIleButNotRunningProcess()
+    public function testOnConsoleCommandWithExistingFileButNotRunningProcess()
     {
         $pidFile = $this->pidDirectory.'/cacheclear.pid';
         file_put_contents($pidFile, '99999');
@@ -145,5 +154,22 @@ class CommandLockEventListenerTest extends \PHPUnit_Framework_TestCase
 
         static::$firstInitiatedListener->shutDown($pidFile2);
         $this->assertFileNotExists($pidFile2);
+    }
+
+    public function testOnConsoleCommandMustNotCreateThePidFile()
+    {
+        $pidFile = $this->pidDirectory.'/cachewarmup.pid';
+        $fs = new Filesystem();
+        if ($fs->exists($pidFile)) {
+            $fs->remove($pidFile);
+        }
+        $myPid = getmypid();
+        $commandForTesting   = new CacheWarmupCommand();
+        $inputForTesting     = new ArrayInput(array());
+        $outputForTesting    = new StreamOutput(fopen('php://memory', 'w', false));
+        $consoleCommandEvent = new ConsoleCommandEvent($commandForTesting, $inputForTesting, $outputForTesting);
+        static::$firstInitiatedListener = new CommandLockEventListener($this->container);
+        static::$firstInitiatedListener->onConsoleCommand($consoleCommandEvent);
+        $this->assertFileNotExists($pidFile);
     }
 }

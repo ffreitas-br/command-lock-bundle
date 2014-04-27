@@ -30,7 +30,7 @@ class CommandLockExtensionTest extends \PHPUnit_Framework_TestCase
      * @var null|string
      */
     protected static $pidDirectory = null;
-    
+
     /**
      * @return void
      */
@@ -40,7 +40,7 @@ class CommandLockExtensionTest extends \PHPUnit_Framework_TestCase
         static::$extension = new CommandLockExtension();
         static::$pidDirectory = sys_get_temp_dir().'/FFreitasBrCommandLockBundle/pid_directory';
     }
-    
+
     public function testMustTriggerExceptionWhenLoadBundleWithoutPidDirectoryConfiguration()
     {
         $pidDirectorySetting   = $this->pidDirectorySetting;
@@ -53,7 +53,7 @@ class CommandLockExtensionTest extends \PHPUnit_Framework_TestCase
         $configuration = array();
         static::$extension->load($configuration, static::$container);
     }
-    
+
     public function testMustRegisterParameterInContainerWithTheFullPidDirectoryAndMustCreateIt()
     {
         $fs = new Filesystem();
@@ -91,5 +91,32 @@ class CommandLockExtensionTest extends \PHPUnit_Framework_TestCase
         $arguments = $definition->getArguments();
         $this->assertCount(1, $arguments);
         $this->assertEquals('service_container', (string)$arguments[0]);
+    }
+
+    public function testMustRegisterExceptionListWithEmptyArray()
+    {
+        $configuration = array(
+            0 => array(
+                $this->pidDirectorySetting => static::$pidDirectory
+            )
+        );
+        static::$extension->load($configuration, static::$container);
+        $configurations = static::$container->getParameter($this->configurationsParameterKey);
+        $this->assertTrue(is_array($configurations[$this->exceptionsListSetting]));
+        $this->assertEquals(array(), $configurations[$this->exceptionsListSetting]);
+    }
+
+    public function testMustRegisterExceptionListWithConfiguredArray()
+    {
+        $configuration = array(
+            0 => array(
+                $this->pidDirectorySetting => static::$pidDirectory,
+                $this->exceptionsListSetting => array('test1', 'test2')
+            )
+        );
+        static::$extension->load($configuration, static::$container);
+        $configurations = static::$container->getParameter($this->configurationsParameterKey);
+        $this->assertTrue(is_array($configurations[$this->exceptionsListSetting]));
+        $this->assertEquals(array('test1', 'test2'), $configurations[$this->exceptionsListSetting]);
     }
 }

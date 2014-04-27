@@ -11,5 +11,6 @@ trait NamesDefinitionsTrait
 {
     protected $configurationsParameterKey = 'command_lock.configuration';
     protected $pidDirectorySetting        = 'pid_directory';
+    protected $exceptionsListSetting      = 'exceptions';
     protected $configurationRootName      = 'command_lock';
 }
