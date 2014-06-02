@@ -52,7 +52,7 @@ command_lock:
 ...
 
 command_lock:
-    exception:
+    exceptions:
         - cache:warmup
         - cache:clear
 
