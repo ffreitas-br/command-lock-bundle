@@ -1,12 +1,13 @@
 command-lock-bundle
 ===================
 [![Build Status](https://travis-ci.org/ffreitas-br/command-lock-bundle.png?branch=master)](https://travis-ci.org/ffreitas-br/command-lock-bundle)
+[![Dependency Status](https://www.versioneye.com/user/projects/537e811114c15833b3000002/badge.svg)](https://www.versioneye.com/user/projects/537e811114c15833b3000002)
 ##
 This `command-lock-bundle` when installed prevents two or more of same command runs simultaneously.
 ***
 ## Installation
 #####
-To install `command-lock-bundle` you will need just a few minutes.  
+To install `command-lock-bundle` you will need just a few minutes.
 #####
 1) Include the `command-lock-bundle` in the `required` section of `composer.json`.
 ### composer.json
