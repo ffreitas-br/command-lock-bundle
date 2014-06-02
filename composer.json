@@ -14,12 +14,10 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/symfony": ">=2.1"
+        "symfony/symfony": "2.5.*@stable"
     },
     "require-dev": {
-        "phpunit/php-code-coverage": "1.2.*@stable",
-        "phpunit/phpunit-mock-objects": "1.2.*@stable",
-        "phpunit/phpunit": "3.7@stable"
+        "phpunit/phpunit": "4.1.*@stable"
     },
     "minimum-stability": "stable",
     "autoload": {
