@@ -17,6 +17,8 @@
         "symfony/symfony": ">=2.1"
     },
     "require-dev": {
+        "phpunit/php-code-coverage": "1.2.*@stable",
+        "phpunit/phpunit-mock-objects": "1.2.*@stable",
         "phpunit/phpunit": "3.7@stable"
     },
     "minimum-stability": "stable",
